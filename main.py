@@ -21,8 +21,7 @@ chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("window-size=1024,768")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument('--disable-dev-shm-usage')        
-chrome_options.add_experimental_option(
-    "mobileEmulation", mobile_emulation)
+chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 # Initialize a new browser
 browser = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
 
@@ -48,34 +47,33 @@ def send_msg():
     results = []
     time.sleep(5)
     response_el = response.xpath('//div[contains(@aria-label, "Results for")]/div/div[./a]')
-    for el in response_el:
-        #print("element append in result array")
-        results.append({
-            'link': el.xpath('./a/@href').extract_first(''),
-            'title': el.xpath('./a/@aria-label').extract_first('')
-    })
-    file_name = ''
-    for item in results:
-        browser.get(item.get('link'))
-        share_element = browser.find_element(By.XPATH, "//button[contains(@data-value, 'Share')]")
-        share_element.click()
-        time.sleep(2)
-        file_name = 'test.png'
-        browser.save_screenshot(file_name)
-        return send_file(file_name)
-        time.sleep(1)
-    #print('RESULT ARRAY',results)
+    # for el in response_el:
+    #     #print("element append in result array")
+    #     results.append({
+    #         'link': el.xpath('./a/@href').extract_first(''),
+    #         'title': el.xpath('./a/@aria-label').extract_first('')
+    # })
     time.sleep(10)
-    browser.get('https://www.google.com/maps/place/Pro+Movers+Miami/data=!4m6!3m5!1s0x88d9b69d4a401a45:0x61c86ad507a75d03!8m2!3d25.769079!4d-80.188602!16s%2Fg%2F1td1qpj4?authuser=0&hl=en&rclk=1')
+    link = response_el[0].xpath('./a/@href').extract_first('')
+    # for item in results:
+    #     browser.get(item.get('link'))
+    #     share_element = browser.find_element(By.XPATH, "//button[contains(@data-value, 'Share')]")
+    #     share_element.click()
+    #     time.sleep(1)
+    #print('RESULT ARRAY',results)
+    browser.get(link)
     # chat_element = browser.find_element(By.XPATH, "//button[contains(@data-value, 'Chat')]")
     # chat_element.click()
-    
+    time.sleep(10)
+    share_element = browser.find_element(By.XPATH, "//button[contains(@data-value, 'Share')]")
+    share_element.click()
+    time.sleep(10)
+    file_name = 'test.png'
+    browser.save_screenshot(file_name)
     browser.quit()
     return send_file(file_name)
     #return jsonify(results)
     #return page_content
-   
-    
    
     # browser.quit()
     # return 'send_msg ok'
